@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState } from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -15,13 +15,7 @@ import {
 } from "@tanstack/react-table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ChevronLeft, ChevronRight, Search, Download } from "lucide-react"
+import { ChevronLeft, ChevronRight, Search, Download, MoreVertical } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface DataTableProps<TData, TValue> {
@@ -39,7 +33,6 @@ export function DataTable<TData, TValue>({
   data,
   searchKey,
   searchPlaceholder = "Search...",
-  hideColumns = [],
   enableExport = false,
   onExport,
 }: DataTableProps<TData, TValue>) {
@@ -62,9 +55,7 @@ export function DataTable<TData, TValue>({
     },
   })
 
-  const visibleColumns = useMemo(() => {
-    return table.getAllColumns().filter(col => !hideColumns.includes(col.id))
-  }, [table, hideColumns])
+  const filterValue = searchKey ? (table.getColumn(searchKey)?.getFilterValue() as string) : undefined
 
   return (
     <div className="space-y-4">
@@ -75,7 +66,7 @@ export function DataTable<TData, TValue>({
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder={searchPlaceholder}
-                value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
+                value={filterValue ?? ""}
                 onChange={(value) =>
                   table.getColumn(searchKey)?.setFilterValue(value.target.value)
                 }
@@ -90,32 +81,11 @@ export function DataTable<TData, TValue>({
                 Export
               </Button>
             )}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  Columns
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {table
-                  .getAllColumns()
-                  .filter((column) => column.getCanHide())
-                  .map((column) => {
-                    return (
-                      <DropdownMenuCheckboxItem
-                        key={column.id}
-                        className="capitalize"
-                        checked={column.getIsVisible()}
-                        onCheckedChange={(value) =>
-                          column.toggleVisibility(value)
-                        }
-                      >
-                        {column.id}
-                      </DropdownMenuCheckboxItem>
-                    )
-                  })}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="relative">
+              <Button variant="outline" size="sm">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       )}
@@ -163,7 +133,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <tr>
                 <td
-                  colSpan={visibleColumns.length}
+                  colSpan={columns.length}
                   className="h-24 text-center align-middle text-muted-foreground"
                 >
                   No results.

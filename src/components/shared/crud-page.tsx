@@ -123,40 +123,43 @@ export function CrudPage({ config }: { config: CrudConfig }) {
       accessorKey: col.key,
       header: col.header,
       cell: col.render
-        ? ({ row }: any) => col.render!(row.original)
-        : ({ row }: any) => <span className="text-sm">{row.getValue(col.key)}</span>,
+        ? ({ row }: { row: { original: any } }) => col.render!(row.original)
+        : ({ row }: { row: { original: any } }) => <span className="text-sm">{row.original[col.key]}</span>,
     }))
 
-    cols.push({
-      id: "actions",
-      header: "",
-      cell: ({ row }: any) => {
-        const record = row.original
-        return (
-          <div className="flex gap-1">
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => {
-                setEditingRow(record)
-                setIsDialogOpen(true)
-              }}
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => handleDelete(record.id)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        )
+    const allColumns = [
+      ...cols,
+      {
+        id: "actions",
+        header: "",
+        cell: ({ row }: { row: { original: any } }) => {
+          const record = row.original
+          return (
+            <div className="flex gap-1">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  setEditingRow(record)
+                  setIsDialogOpen(true)
+                }}
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => handleDelete(record.id)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          )
+        },
       },
-    })
+    ]
 
-    return cols
+    return allColumns
   }, [config.columns])
 
   const filteredRows = searchQuery && config.searchKey
@@ -202,7 +205,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
         </div>
 
         <DataTable
-          columns={tableColumns}
+          columns={tableColumns as any}
           data={filteredRows ?? []}
           searchKey={config.searchKey}
           searchPlaceholder={`Search ${config.title.toLowerCase()}...`}
@@ -229,8 +232,6 @@ interface CrudDialogProps {
 }
 
 function CrudDialog({ config, editingRow, onClose, onSave }: CrudDialogProps) {
-  const dialogId = `crud-dialog-${config.table}`
-
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-card border rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">

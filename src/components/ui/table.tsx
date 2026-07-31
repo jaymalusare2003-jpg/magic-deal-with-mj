@@ -20,7 +20,7 @@ const TableHeader = ({ className, ...props }: React.HTMLAttributes<HTMLTableSect
 );
 TableHeader.displayName = "TableHeader";
 
-const TableBody = ({ className, ...props }: React.HTMLAttributes<HTMLTableBodyElement>) => (
+const TableBody = ({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) => (
   <tbody className={cn("divide-y divide-border", className)} {...props} />
 );
 TableBody.displayName = "TableBody";

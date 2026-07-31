@@ -56,8 +56,8 @@ export interface Database {
           created_at: string
           updated_at: string
         }
-        Insert: Partial<cpa_networks['Row']>
-        Update: Partial<cpa_networks['Row']>
+        Insert: Partial<Database["public"]["Tables"]["cpa_networks"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["cpa_networks"]["Row"]>
       }
       offers: {
         Row: {
@@ -81,8 +81,8 @@ export interface Database {
           created_at: string
           updated_at: string
         }
-        Insert: Partial<offers['Row']>
-        Update: Partial<offers['Row']>
+        Insert: Partial<Database["public"]["Tables"]["offers"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["offers"]["Row"]>
       }
       categories: {
         Row: {
@@ -96,8 +96,8 @@ export interface Database {
           created_at: string
           updated_at: string
         }
-        Insert: Partial<categories['Row']>
-        Update: Partial<categories['Row']>
+        Insert: Partial<Database["public"]["Tables"]["categories"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["categories"]["Row"]>
       }
       countries: {
         Row: {
@@ -112,8 +112,8 @@ export interface Database {
           created_at: string
           updated_at: string
         }
-        Insert: Partial<countries['Row']>
-        Update: Partial<countries['Row']>
+        Insert: Partial<Database["public"]["Tables"]["countries"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["countries"]["Row"]>
       }
       traffic_sources: {
         Row: {
@@ -127,8 +127,8 @@ export interface Database {
           created_at: string
           updated_at: string
         }
-        Insert: Partial<traffic_sources['Row']>
-        Update: Partial<traffic_sources['Row']>
+        Insert: Partial<Database["public"]["Tables"]["traffic_sources"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["traffic_sources"]["Row"]>
       }
       ai_employees: {
         Row: {
@@ -149,8 +149,8 @@ export interface Database {
           created_at: string
           updated_at: string
         }
-        Insert: Partial<ai_employees['Row']>
-        Update: Partial<ai_employees['Row']>
+        Insert: Partial<Database["public"]["Tables"]["ai_employees"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["ai_employees"]["Row"]>
       }
       landing_pages: {
         Row: {
@@ -165,8 +165,8 @@ export interface Database {
           created_at: string
           updated_at: string
         }
-        Insert: Partial<landing_pages['Row']>
-        Update: Partial<landing_pages['Row']>
+        Insert: Partial<Database["public"]["Tables"]["landing_pages"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["landing_pages"]["Row"]>
       }
       campaigns: {
         Row: {
@@ -187,8 +187,8 @@ export interface Database {
           created_at: string
           updated_at: string
         }
-        Insert: Partial<campaigns['Row']>
-        Update: Partial<campaigns['Row']>
+        Insert: Partial<Database["public"]["Tables"]["campaigns"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["campaigns"]["Row"]>
       }
       tracking_links: {
         Row: {
@@ -209,8 +209,8 @@ export interface Database {
           created_at: string
           updated_at: string
         }
-        Insert: Partial<tracking_links['Row']>
-        Update: Partial<tracking_links['Row']>
+        Insert: Partial<Database["public"]["Tables"]["tracking_links"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["tracking_links"]["Row"]>
       }
       visits: {
         Row: {
@@ -223,8 +223,8 @@ export interface Database {
           timestamp: string
           converted: boolean
         }
-        Insert: Partial<visits['Row']>
-        Update: Partial<visits['Row']>
+        Insert: Partial<Database["public"]["Tables"]["visits"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["visits"]["Row"]>
       }
       analytics_events: {
         Row: {
@@ -241,8 +241,8 @@ export interface Database {
           metadata: Json | null
           timestamp: string
         }
-        Insert: Partial<analytics_events['Row']>
-        Update: Partial<analytics_events['Row']>
+        Insert: Partial<Database["public"]["Tables"]["analytics_events"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["analytics_events"]["Row"]>
       }
       reports: {
         Row: {
@@ -253,8 +253,8 @@ export interface Database {
           generated_by: string
           created_at: string
         }
-        Insert: Partial<reports['Row']>
-        Update: Partial<reports['Row']>
+        Insert: Partial<Database["public"]["Tables"]["reports"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["reports"]["Row"]>
       }
       notifications: {
         Row: {
@@ -267,8 +267,8 @@ export interface Database {
           action_url: string | null
           created_at: string
         }
-        Insert: Partial<notifications['Row']>
-        Update: Partial<notifications['Row']>
+        Insert: Partial<Database["public"]["Tables"]["notifications"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["notifications"]["Row"]>
       }
       compliance: {
         Row: {
@@ -286,8 +286,8 @@ export interface Database {
           created_at: string
           updated_at: string
         }
-        Insert: Partial<compliance['Row']>
-        Update: Partial<compliance['Row']>
+        Insert: Partial<Database["public"]["Tables"]["compliance"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["compliance"]["Row"]>
       }
       link_health: {
         Row: {
@@ -303,8 +303,8 @@ export interface Database {
           created_at: string
           updated_at: string
         }
-        Insert: Partial<link_health['Row']>
-        Update: Partial<link_health['Row']>
+        Insert: Partial<Database["public"]["Tables"]["link_health"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["link_health"]["Row"]>
       }
       app_settings: {
         Row: {
@@ -315,8 +315,8 @@ export interface Database {
           created_at: string
           updated_at: string
         }
-        Insert: Partial<app_settings['Row']>
-        Update: Partial<app_settings['Row']>
+        Insert: Partial<Database["public"]["Tables"]["app_settings"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["app_settings"]["Row"]>
       }
       audit_logs: {
         Row: {
@@ -329,8 +329,8 @@ export interface Database {
           new_values: Json | null
           created_at: string
         }
-        Insert: Partial<audit_logs['Row']>
-        Update: Partial<audit_logs['Row']>
+        Insert: Partial<Database["public"]["Tables"]["audit_logs"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["audit_logs"]["Row"]>
       }
       integrations: {
         Row: {
@@ -342,8 +342,8 @@ export interface Database {
           created_at: string
           updated_at: string
         }
-        Insert: Partial<integrations['Row']>
-        Update: Partial<integrations['Row']>
+        Insert: Partial<Database["public"]["Tables"]["integrations"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["integrations"]["Row"]>
       }
     }
     Views: {

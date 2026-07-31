@@ -2,9 +2,11 @@ import * as React from "react";
 import * as SwitchPrimitive from "@radix-ui/react-switch";
 import { cn } from "@/lib/utils";
 
+export interface SwitchProps extends React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root> {}
+
 const Switch = React.forwardRef<
   React.ComponentRef<typeof SwitchPrimitive.Root>,
-  React.ComponentRef<typeof SwitchPrimitive.Root>
+  SwitchProps
 >(({ className, ...props }, ref) => (
   <SwitchPrimitive.Root
     ref={ref}
@@ -19,4 +21,5 @@ const Switch = React.forwardRef<
 ));
 Switch.displayName = SwitchPrimitive.Root.displayName;
 
+export { Switch };
 export default Switch;
