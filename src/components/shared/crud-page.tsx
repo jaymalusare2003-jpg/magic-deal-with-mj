@@ -23,11 +23,12 @@ export interface ColumnConfig {
 export interface FieldConfig {
   name: string
   label: string
-  type: "text" | "number" | "email" | "url" | "textarea" | "select" | "switch" | "date"
+  type: "text" | "number" | "email" | "url" | "textarea" | "select" | "switch" | "date" | "json" | "image"
   required?: boolean
   options?: Array<{ value: string; label: string }>
   placeholder?: string
   colSpan?: number
+  multiple?: boolean
 }
 
 export interface CrudConfig {
@@ -101,8 +102,16 @@ export function CrudPage({ config }: { config: CrudConfig }) {
   const handleSave = async (formData: FormData) => {
     const payload: Record<string, any> = {}
     config.fields.forEach(f => {
-      const val = formData.get(f.name)
-      payload[f.name] = f.type === "number" ? Number(val) : val
+      if (f.multiple) {
+        payload[f.name] = formData.getAll(f.name)
+      } else if (f.type === "number") {
+        payload[f.name] = Number(formData.get(f.name) || 0)
+      } else if (f.type === "json") {
+        const val = formData.get(f.name)
+        try { payload[f.name] = val ? JSON.parse(val as string) : null } catch { payload[f.name] = val }
+      } else {
+        payload[f.name] = formData.get(f.name)
+      }
     })
 
     try {
@@ -262,9 +271,11 @@ function CrudDialog({ config, editingRow, onClose, onSave }: CrudDialogProps) {
                     name={field.name}
                     required={field.required}
                     defaultValue={editingRow?.[field.name]}
+                    multiple={field.multiple}
+                    size={field.multiple ? Math.min(field.options?.length ?? 4, 6) : undefined}
                     className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
                   >
-                    <option value="">Select...</option>
+                    {!field.multiple && <option value="">Select...</option>}
                     {field.options?.map(opt => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
                     ))}
@@ -279,6 +290,14 @@ function CrudDialog({ config, editingRow, onClose, onSave }: CrudDialogProps) {
                     />
                     <Label>{field.label}</Label>
                   </div>
+                ) : field.type === "json" ? (
+                  <textarea
+                    name={field.name}
+                    placeholder={field.placeholder || "Enter JSON..."}
+                    defaultValue={editingRow?.[field.name] ? JSON.stringify(editingRow[field.name], null, 2) : ""}
+                    className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm font-mono text-xs"
+                    rows={4}
+                  />
                 ) : (
                   <Input
                     type={field.type}
