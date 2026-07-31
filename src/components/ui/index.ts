@@ -33,3 +33,4 @@ export {
   TableCell,
 } from "./table";
 export { Card, CardHeader, CardTitle, CardContent, CardFooter } from "./card";
+export { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
