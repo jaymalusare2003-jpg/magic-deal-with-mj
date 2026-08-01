@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { createClient } from "@/lib/supabase/client"
 import TiptapEditor from "@/components/tiptap/tiptap-editor"
-import { Copy, Download, Save, Send, Search, FileText, Share2, Hash } from "lucide-react"
+import { Copy, Download, Save, Send, FileText, Share2, Hash } from "lucide-react"
 
 const CONTENT_TYPES = [
   { id: "blog-post", name: "Blog Post", description: "Full-length SEO blog article" },
@@ -50,11 +50,15 @@ export default function ContentStudioPage() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [savedContents, setSavedContents] = useState<any[]>([])
   const queryClient = useQueryClient()
+  const supabase = useMemo(() => {
+    if (typeof window === "undefined") return null
+    return createClient()
+  }, [])
 
   const { data: countries } = useQuery({
     queryKey: ["countries"],
     queryFn: async () => {
-      const supabase = createClient()
+      if (!supabase) return []
       const { data, error } = await supabase.from("countries").select("code, name")
       if (error) throw error
       return data
@@ -68,11 +72,25 @@ export default function ContentStudioPage() {
     setGeneratedContent("")
 
     try {
+      if (!supabase) throw new Error("Supabase client not available")
+      const { data: employee } = await (supabase as any)
+        .from("ai_employees")
+        .select("id")
+        .eq("role", "content-employee")
+        .eq("enabled", true)
+        .single()
+
+      if (!employee) {
+        setGeneratedContent("<p>Error: AI Content Employee not found or disabled. Please verify the employee exists in the database.</p>")
+        setIsGenerating(false)
+        return
+      }
+
       const response = await fetch("/api/ai/run-employee", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          employeeId: "content-employee",
+          employeeId: employee.id,
           prompt: `Generate ${activeTab.replace("-", " ")} content about "${topic}" for country ${country}, in ${language} language, with ${tone} tone, ${length} length. Format as proper HTML and return only the content without explanations.`,
         }),
       })
@@ -81,17 +99,18 @@ export default function ContentStudioPage() {
       if (result.result) {
         setGeneratedContent(result.result)
       } else {
-        setGeneratedContent("<p>Error generating content. Please check your API key configuration.</p>")
+        setGeneratedContent(`<p>Error generating content: ${result.error || "Please check your OpenAI API key configuration."}</p>`)
       }
     } catch (error) {
-      setGeneratedContent("<p>Error generating content. Please try again.</p>")
+      const errorMessage = error instanceof Error ? error.message : "Unknown error"
+      setGeneratedContent(`<p>Error generating content: ${errorMessage}</p>`)
     } finally {
       setIsGenerating(false)
     }
   }
 
   const handleSaveContent = async () => {
-    const supabase = createClient()
+    if (!supabase) return
     await (supabase as any).from("app_settings").insert({
       key: `content_${Date.now()}`,
       value: {

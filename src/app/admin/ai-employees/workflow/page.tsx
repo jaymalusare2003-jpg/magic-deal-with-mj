@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -44,11 +44,15 @@ export default function WorkflowPage() {
   const [workflowResults, setWorkflowResults] = useState<Record<string, WorkflowResult>>({})
   const [isRunning, setIsRunning] = useState(false)
   const [workflowLog, setWorkflowLog] = useState<string[]>([])
-  const supabase = createClient()
+  const supabase = useMemo(() => {
+    if (typeof window === "undefined") return null
+    return createClient()
+  }, [])
 
   const { data: offers } = useQuery({
     queryKey: ["offers"],
     queryFn: async () => {
+      if (!supabase) throw new Error("Supabase client not available")
       const { data, error } = await supabase.from("offers").select("id, name, status")
       if (error) throw error
       return data

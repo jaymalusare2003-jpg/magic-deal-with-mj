@@ -3,11 +3,8 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { StatCard } from "@/components/shared/stat-card"
-import { RefreshCw, AlertCircle, CheckCircle, Clock, PauseCircle, ExternalLink, BarChart3 } from "lucide-react"
-import { createClient } from "@/lib/supabase/client"
+import { RefreshCw, AlertCircle, CheckCircle, Clock, PauseCircle } from "lucide-react"
 
 const STATUS_TYPES = {
   active: { color: "bg-green-100 text-green-800", icon: CheckCircle, iconColor: "text-green-600" },
@@ -26,7 +23,6 @@ const mockLinks = [
 ]
 
 export default async function LinkHealthPage() {
-  const supabase = createClient()
   const [isChecking, setIsChecking] = useState(false)
   const [lastChecked, setLastChecked] = useState("2024-07-30 14:30")
 

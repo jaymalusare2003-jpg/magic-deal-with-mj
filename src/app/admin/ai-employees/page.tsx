@@ -1,13 +1,11 @@
 "use client"
 
-import { createClient } from "@/lib/supabase/client"
 import { CrudPage, CrudConfig } from "@/components/shared/crud-page"
 import { Brain } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
 export default function AiEmployeesPage() {
-  const supabase = createClient()
 
   const config: CrudConfig = {
     table: "ai_employees",

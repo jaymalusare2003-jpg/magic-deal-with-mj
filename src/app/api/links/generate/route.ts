@@ -24,8 +24,8 @@ export async function POST(request: NextRequest) {
     }
 
     const baseUrl = campaign.landing_pages?.slug
-      ? `${process.env.NEXTAUTH_URL || process.env.VERCEL_URL || "http://localhost:3000"}/campaign/${campaign.landing_pages.slug}`
-      : `${process.env.NEXTAUTH_URL || process.env.VERCEL_URL || "http://localhost:3000"}/campaign/${campaign.slug || campaign.name}`
+      ? `https://${process.env.NEXTAUTH_URL?.replace(/^https?:\/\//, "") || process.env.VERCEL_URL || "localhost:3000"}/campaign/${campaign.landing_pages.slug}`
+      : `https://${process.env.NEXTAUTH_URL?.replace(/^https?:\/\//, "") || process.env.VERCEL_URL || "localhost:3000"}/campaign/${campaign.slug || campaign.name}`
 
     const utmParams = new URLSearchParams()
     if (source) utmParams.set("utm_source", source)
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       url: fullUrl,
       shortCode,
-      shortUrl: `${process.env.NEXTAUTH_URL || process.env.VERCEL_URL || "http://localhost:3000"}/api/track/${shortCode}`,
+      shortUrl: `https://${process.env.NEXTAUTH_URL?.replace(/^https?:\/\//, "") || process.env.VERCEL_URL || "localhost:3000"}/api/track/${shortCode}`,
       qrCode: qrCodeUrl,
       utm: { source, medium: medium || "referral", campaign: campaignName, content, term },
     })

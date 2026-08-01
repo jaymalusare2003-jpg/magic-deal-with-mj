@@ -28,7 +28,6 @@ import {
   Moon,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useTheme } from "next-themes";
 
 const iconMap: Record<string, React.ElementType> = {
   LayoutDashboard,
@@ -95,10 +94,36 @@ export function Sidebar({ className }: { className?: string }) {
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window !== "undefined") {
+      return document.documentElement.classList.contains("dark");
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+      setIsDark(true);
+    } else if (savedTheme === "light") {
+      document.documentElement.classList.remove("dark");
+      setIsDark(false);
+    }
+  }, []);
 
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    const html = document.documentElement;
+    if (isDark) {
+      html.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      setIsDark(false);
+    } else {
+      html.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      setIsDark(true);
+    }
   };
 
   return (
@@ -116,9 +141,9 @@ export function Header() {
         <button
           onClick={toggleTheme}
           className="p-2 rounded-lg hover:bg-muted"
-          title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          title={isDark ? "Switch to light mode" : "Switch to dark mode"}
         >
-          {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+          {isDark ? <Sun size={20} /> : <Moon size={20} />}
         </button>
         <button className="p-2 rounded-lg hover:bg-muted relative">
           <Bell size={18} />

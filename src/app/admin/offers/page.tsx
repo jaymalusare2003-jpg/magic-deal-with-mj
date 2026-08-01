@@ -3,15 +3,19 @@
 import { createClient } from "@/lib/supabase/client"
 import { CrudPage } from "@/components/shared/crud-page"
 import type { CrudConfig } from "@/components/shared/crud-page"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 
 export default function OffersPage() {
-  const supabase = createClient()
+  const supabase = useMemo(() => {
+    if (typeof window === "undefined") return null
+    return createClient()
+  }, [])
   const [networkOptions, setNetworkOptions] = useState<Array<{ value: string; label: string }>>([])
   const [categoryOptions, setCategoryOptions] = useState<Array<{ value: string; label: string }>>([])
   const [countryOptions, setCountryOptions] = useState<Array<{ value: string; label: string }>>([])
 
   useEffect(() => {
+    if (!supabase) return
     const fetchOptions = async () => {
       const { data: networks } = await supabase.from("cpa_networks").select("id, name")
       const { data: categories } = await supabase.from("categories").select("id, name")

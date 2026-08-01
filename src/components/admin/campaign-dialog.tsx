@@ -90,7 +90,7 @@ export function CampaignDialog({ offers, networks, categories, countries, landin
               <Label>Country *</Label>
               <select name="country_id" required className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
                 <option value="">Select Country</option>
-                {countries.map((c: any) => <option key={c.code} value={c.code}>{c.name} ({c.code})</option>)}
+                {countries.map((c: any) => <option key={c.code} value={c.id}>{c.name} ({c.code})</option>)}
               </select>
             </div>
             <div>

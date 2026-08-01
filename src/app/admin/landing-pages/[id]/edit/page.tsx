@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useMemo } from "react"
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
 import {
   arrayMove,
@@ -103,6 +103,11 @@ export default function LandingPageBuilder({ params }: { params: { id: string } 
   const [showPreview, setShowPreview] = useState(false)
   const queryClient = useQueryClient()
 
+  const supabase = useMemo(() => {
+    if (typeof window === "undefined") return null
+    return createClient()
+  }, [])
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -113,7 +118,7 @@ export default function LandingPageBuilder({ params }: { params: { id: string } 
   const { data: landingPage, isLoading } = useQuery({
     queryKey: ["landingPage", params.id],
     queryFn: async () => {
-      const supabase = createClient()
+      if (!supabase) throw new Error("Supabase client not available")
       const { data, error } = await supabase
         .from("landing_pages")
         .select("*")
@@ -127,7 +132,7 @@ export default function LandingPageBuilder({ params }: { params: { id: string } 
 
   const updateMutation = useMutation({
     mutationFn: async (payload: any) => {
-      const supabase = createClient()
+      if (!supabase) throw new Error("Supabase client not available")
       const { error } = await (supabase as any)
         .from("landing_pages")
         .update(payload)

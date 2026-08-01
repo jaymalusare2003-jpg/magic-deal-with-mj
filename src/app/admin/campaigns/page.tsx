@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { StatCard } from "@/components/shared/stat-card"
 import { DataTable } from "@/components/shared/data-table"
@@ -10,7 +10,10 @@ import Link from "next/link"
 import { Copy, Plus, Edit, Search, Globe, BarChart3, QrCode, Link2 } from "lucide-react"
 
 export default function CampaignsPage() {
-  const supabase = createClient()
+  const supabase = useMemo(() => {
+    if (typeof window === "undefined") return null
+    return createClient()
+  }, [])
   const [campaigns, setCampaigns] = useState<any[]>([])
   const [offers, setOffers] = useState<any[]>([])
   const [networks, setNetworks] = useState<any[]>([])
@@ -19,12 +22,13 @@ export default function CampaignsPage() {
   const [landingPages, setLandingPages] = useState<any[]>([])
 
   useEffect(() => {
+    if (!supabase) return
     const fetchData = async () => {
       const { data: campaignData } = await supabase.from("campaigns").select("*").order("created_at", { ascending: false })
       const { data: offerData } = await supabase.from("offers").select("id, name")
       const { data: networkData } = await supabase.from("cpa_networks").select("id, name")
       const { data: categoryData } = await supabase.from("categories").select("id, name")
-      const { data: countryData } = await supabase.from("countries").select("code, name")
+      const { data: countryData } = await supabase.from("countries").select("id, code, name")
       const { data: lpData } = await supabase.from("landing_pages").select("id, name, slug")
 
       setCampaigns(campaignData || [])
