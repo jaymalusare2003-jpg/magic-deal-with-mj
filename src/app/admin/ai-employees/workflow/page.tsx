@@ -62,8 +62,8 @@ export default function WorkflowPage() {
     setWorkflowLog([])
     setWorkflowResults({})
 
-    Object.keys(WORKFLOW_STEPS).forEach(key => {
-      setWorkflowResults(prev => ({ ...prev, [key]: { status: "pending" } }))
+    WORKFLOW_STEPS.forEach(key => {
+      setWorkflowResults(prev => ({ ...prev, [key.id]: { status: "pending" } }))
     })
 
     for (const step of WORKFLOW_STEPS) {

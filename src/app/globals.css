@@ -22,6 +22,26 @@
   --ring: #2563eb;
 }
 
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --card: #141414;
+  --card-foreground: #ededed;
+  --muted: #1a1a1a;
+  --muted-foreground: #a1a1aa;
+  --border: #272727;
+  --input: #272727;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #ededed;
+  --accent: #3b82f6;
+  --accent-foreground: #ffffff;
+  --popover: #141414;
+  --popover-foreground: #ededed;
+  --ring: #3b82f6;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

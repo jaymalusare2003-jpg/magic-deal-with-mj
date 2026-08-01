@@ -1,11 +1,11 @@
-import { createClient } from "@/lib/supabase/server"
+"use client"
+
+import { createClient } from "@/lib/supabase/client"
 import { CrudPage } from "@/components/shared/crud-page"
-import { Network, Globe, Clock } from "lucide-react"
+import { Network } from "lucide-react"
 import type { CrudConfig } from "@/components/shared/crud-page"
 
-export default async function CpaNetworksPage() {
-  const supabase = await createClient()
-
+export default function CpaNetworksPage() {
   const config: CrudConfig = {
     table: "cpa_networks",
     title: "CPA Networks",

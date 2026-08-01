@@ -1,17 +1,28 @@
-import { createClient } from "@/lib/supabase/server"
+"use client"
+
+import { createClient } from "@/lib/supabase/client"
 import { CrudPage } from "@/components/shared/crud-page"
 import type { CrudConfig } from "@/components/shared/crud-page"
+import { useEffect, useState } from "react"
 
-export default async function OffersPage() {
-  const supabase = await createClient()
+export default function OffersPage() {
+  const supabase = createClient()
+  const [networkOptions, setNetworkOptions] = useState<Array<{ value: string; label: string }>>([])
+  const [categoryOptions, setCategoryOptions] = useState<Array<{ value: string; label: string }>>([])
+  const [countryOptions, setCountryOptions] = useState<Array<{ value: string; label: string }>>([])
 
-  const { data: networks } = await supabase.from("cpa_networks").select("id, name") as any
-  const { data: categories } = await supabase.from("categories").select("id, name") as any
-  const { data: countries } = await supabase.from("countries").select("code, name") as any
+  useEffect(() => {
+    const fetchOptions = async () => {
+      const { data: networks } = await supabase.from("cpa_networks").select("id, name")
+      const { data: categories } = await supabase.from("categories").select("id, name")
+      const { data: countries } = await supabase.from("countries").select("code, name")
 
-  const networkOptions = (networks || []).map((n: any) => ({ value: n.id, label: n.name }))
-  const categoryOptions = (categories || []).map((c: any) => ({ value: c.id, label: c.name }))
-  const countryOptions = (countries || []).map((c: any) => ({ value: c.code, label: `${c.name} (${c.code})` }))
+      setNetworkOptions((networks || []).map((n: any) => ({ value: n.id, label: n.name })))
+      setCategoryOptions((categories || []).map((c: any) => ({ value: c.id, label: c.name })))
+      setCountryOptions((countries || []).map((c: any) => ({ value: c.code, label: `${c.name} (${c.code})` })))
+    }
+    fetchOptions()
+  }, [])
 
   const config: CrudConfig = {
     table: "offers",
@@ -24,16 +35,14 @@ export default async function OffersPage() {
         key: "cpa_network_id",
         header: "Network",
         render: (row: any) => {
-          const network = (networks || []).find((n: any) => n.id === row.cpa_network_id)
-          return <span className="text-sm">{network?.name || "Unassigned"}</span>
+          return <span className="text-sm">{(row.cpa_network_id || "—")}</span>
         },
       },
       {
         key: "category_id",
         header: "Category",
         render: (row: any) => {
-          const category = (categories || []).find((c: any) => c.id === row.category_id)
-          return <span className="text-sm">{category?.name || "—"}</span>
+          return <span className="text-sm">{(row.category_id || "—")}</span>
         },
       },
       { key: "payout", header: "Payout", render: (row: any) => <span className="font-medium">{row.currency} {row.payout}</span> },

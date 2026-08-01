@@ -1,14 +1,13 @@
-import { createClient } from "@/lib/supabase/server"
+"use client"
+
+import { createClient } from "@/lib/supabase/client"
 import { CrudPage, CrudConfig } from "@/components/shared/crud-page"
-import { Brain, ToggleLeft } from "lucide-react"
+import { Brain } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
-export default async function AiEmployeesPage() {
-  const supabase = await createClient()
-  const { data: employees } = await supabase.from("ai_employees").select("*") as any
-
-  const employeeOptions = (employees || []).map((e: any) => ({ value: e.id, label: e.name }))
+export default function AiEmployeesPage() {
+  const supabase = createClient()
 
   const config: CrudConfig = {
     table: "ai_employees",

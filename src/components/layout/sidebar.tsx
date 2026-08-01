@@ -24,8 +24,11 @@ import {
   LogOut,
   Menu,
   X,
+  Sun,
+  Moon,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 
 const iconMap: Record<string, React.ElementType> = {
   LayoutDashboard,
@@ -92,6 +95,11 @@ export function Sidebar({ className }: { className?: string }) {
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   return (
     <header className="bg-card border-b px-4 py-3 flex items-center justify-between">
@@ -105,6 +113,13 @@ export function Header() {
         <h1 className="text-lg font-semibold">Admin Dashboard</h1>
       </div>
       <div className="flex items-center gap-3">
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-lg hover:bg-muted"
+          title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
         <button className="p-2 rounded-lg hover:bg-muted relative">
           <Bell size={18} />
           <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">

@@ -1,7 +1,9 @@
+"use client"
+
 import { CrudPage } from "@/components/shared/crud-page"
 import type { CrudConfig } from "@/components/shared/crud-page"
 
-export default async function CountriesPage() {
+export default function CountriesPage() {
   const config: CrudConfig = {
     table: "countries",
     title: "Countries",
