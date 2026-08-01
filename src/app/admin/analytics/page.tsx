@@ -2,15 +2,6 @@ import { createClient } from "@/lib/supabase/server"
 import { StatCard, StatGrid } from "@/components/shared/stat-card"
 import { AreaChartCard, BarChartCard, PieChartCard, LineChartCard } from "@/components/shared/charts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  MousePointerClick,
-  TrendingUp,
-  Users,
-  DollarSign,
-  Globe,
-  Target,
-  BarChart3,
-} from "lucide-react"
 
 const mockVisitorTrend = [
   { date: "Mon", visitors: 1200, clicks: 450, conversions: 32, revenue: 3200 },
@@ -89,14 +80,14 @@ export default async function AnalyticsPage() {
       </div>
 
       <StatGrid>
-        <StatCard title="Total Visitors" value={totalVisitors.toLocaleString()} icon={Users} change="+12% from last 7 days" changeType="increase" />
-        <StatCard title="Total Clicks" value={totalClicks.toLocaleString()} icon={MousePointerClick} change="+8% from last 7 days" changeType="increase" />
-        <StatCard title="Total Conversions" value={totalConversions.toLocaleString()} icon={Target} change="+5% from last 7 days" changeType="increase" />
-        <StatCard title="Conversion Rate" value={`${cr}%`} icon={TrendingUp} change="-0.3% from last week" changeType="decrease" />
-        <StatCard title="Total Revenue" value={`$${totalRevenue.toLocaleString()}`} icon={DollarSign} change="+15% from last 7 days" changeType="increase" />
-        <StatCard title="EPC" value={`$${epc}`} icon={BarChart3} change="+0.25 from last week" changeType="increase" />
-        <StatCard title="Total Leads" value={leads} icon={Users} change="+18% this week" changeType="increase" />
-        <StatCard title="Commission" value={`$${commission.toLocaleString()}`} icon={DollarSign} change="+14% from last 7 days" changeType="increase" />
+        <StatCard title="Total Visitors" value={totalVisitors.toLocaleString()} icon="Users" change="+12% from last 7 days" changeType="increase" />
+        <StatCard title="Total Clicks" value={totalClicks.toLocaleString()} icon="MousePointerClick" change="+8% from last 7 days" changeType="increase" />
+        <StatCard title="Total Conversions" value={totalConversions.toLocaleString()} icon="Target" change="+5% from last 7 days" changeType="increase" />
+        <StatCard title="Conversion Rate" value={`${cr}%`} icon="TrendingUp" change="-0.3% from last week" changeType="decrease" />
+        <StatCard title="Total Revenue" value={`$${totalRevenue.toLocaleString()}`} icon="DollarSign" change="+15% from last 7 days" changeType="increase" />
+        <StatCard title="EPC" value={`$${epc}`} icon="BarChart3" change="+0.25 from last week" changeType="increase" />
+        <StatCard title="Total Leads" value={leads} icon="Users" change="+18% this week" changeType="increase" />
+        <StatCard title="Commission" value={`$${commission.toLocaleString()}`} icon="DollarSign" change="+14% from last 7 days" changeType="increase" />
       </StatGrid>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">

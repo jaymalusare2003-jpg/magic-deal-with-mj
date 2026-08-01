@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/client"
 import { useState } from "react"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -19,6 +20,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -47,7 +49,7 @@ export default function LoginPage() {
       return
     }
 
-    window.location.href = "/admin"
+    router.push("/admin")
   }
 
   return (

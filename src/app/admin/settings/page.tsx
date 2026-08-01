@@ -34,8 +34,8 @@ export default async function SettingsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <StatCard title="Total Settings" value={appSettings?.length || 0} icon={Shield} />
-        <StatCard title="Audit Logs" value={auditLogs?.length || 0} icon={Shield} />
+        <StatCard title="Total Settings" value={appSettings?.length || 0} icon="Shield" />
+        <StatCard title="Audit Logs" value={auditLogs?.length || 0} icon="Shield" />
       </div>
 
       <form action={saveSettings} method="post" className="space-y-6">

@@ -76,7 +76,7 @@ export default async function ReportsPage() {
         </Button>
       </div>
 
-      <StatCard title="Total Reports" value={totalReports} icon={FileText} />
+      <StatCard title="Total Reports" value={totalReports} icon="FileText" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {REPORT_TEMPLATES.map((template) => (

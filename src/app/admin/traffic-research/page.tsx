@@ -129,10 +129,10 @@ export default async function TrafficResearchPage() {
       </div>
 
       <StatGrid>
-        <StatCard title="Traffic Sources" value={sourcesCount} icon={Globe} change="Total sources" />
-        <StatCard title="Opportunities Found" value={24} icon={Target} change="+5 from last week" changeType="increase" />
-        <StatCard title="Avg Relevance Score" value="82%" icon={BarChart3} change="+3% this month" changeType="increase" />
-        <StatCard title="Compliance Safe" value="78%" icon={Zap} change="Of opportunities" />
+        <StatCard title="Traffic Sources" value={sourcesCount} icon="Globe" change="Total sources" />
+        <StatCard title="Opportunities Found" value={24} icon="Target" change="+5 from last week" changeType="increase" />
+        <StatCard title="Avg Relevance Score" value="82%" icon="BarChart3" change="+3% this month" changeType="increase" />
+        <StatCard title="Compliance Safe" value="78%" icon="Zap" change="Of opportunities" />
       </StatGrid>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">

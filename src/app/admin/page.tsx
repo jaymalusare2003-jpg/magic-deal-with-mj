@@ -2,16 +2,6 @@ import { getProfile } from "@/lib/auth/require-auth"
 import { createClient } from "@/lib/supabase/server"
 import { StatCard, StatGrid } from "@/components/shared/stat-card"
 import { LineChartCard, BarChartCard, PieChartCard, AreaChartCard } from "@/components/shared/charts"
-import {
-  LayoutDashboard,
-  Target,
-  Gift,
-  TrendingUp,
-  DollarSign,
-  MousePointerClick,
-  Users,
-  Globe,
-} from "lucide-react"
 
 const mockVisitorTrend = [
   { date: "Mon", visitors: 1200, clicks: 450, conversions: 32 },
@@ -41,8 +31,18 @@ const mockCategoryData = [
   { name: "Other", value: 11 },
 ]
 
-export default async function DashboardPage() {
-  const profile = await getProfile()
+const statItems = [
+  { title: "Total Networks", valueKey: "networksCount", change: "+2 from last month", changeType: "increase" as const, icon: "LayoutDashboard" },
+  { title: "Total Offers", valueKey: "offersCount", change: "+15 this week", changeType: "increase" as const, icon: "Gift" },
+  { title: "Active Campaigns", valueKey: "campaignCount", change: "+3 from last week", changeType: "increase" as const, icon: "Target" },
+  { title: "Total Revenue", value: "$12,432.00", change: "+12% from last month", changeType: "increase" as const, icon: "DollarSign" },
+  { title: "Conversion Rate", value: "4.2%", change: "-0.3% from last week", changeType: "decrease" as const, icon: "TrendingUp" },
+  { title: "Total Clicks", value: "12,430", change: "+8% from last week", changeType: "increase" as const, icon: "MousePointerClick" },
+  { title: "Total Leads", value: "523", change: "+18% this week", changeType: "increase" as const, icon: "Users" },
+  { title: "Top Country", value: "United States", change: "35% of traffic", icon: "Globe", iconNoChange: true },
+]
+
+async function DashboardData() {
   const supabase = await createClient()
 
   const { data: networks } = await supabase.from("cpa_networks").select("id", { count: "exact" })
@@ -51,8 +51,16 @@ export default async function DashboardPage() {
     .from("campaigns")
     .select("id", { count: "exact" })
 
-  const networksCount = networks?.length ?? 0
-  const offersCount = offers?.length ?? 0
+  return {
+    networksCount: networks?.length ?? 0,
+    offersCount: offers?.length ?? 0,
+    campaignCount: campaignCount ?? 0,
+  }
+}
+
+export default async function DashboardPage() {
+  const profile = await getProfile()
+  const stats = await DashboardData()
 
   return (
     <div className="p-6 space-y-6">
@@ -66,61 +74,16 @@ export default async function DashboardPage() {
       </div>
 
       <StatGrid>
-        <StatCard
-          title="Total Networks"
-          value={networksCount}
-          icon={LayoutDashboard}
-          change="+2 from last month"
-          changeType="increase"
-        />
-        <StatCard
-          title="Total Offers"
-          value={offersCount}
-          icon={Gift}
-          change="+15 this week"
-          changeType="increase"
-        />
-        <StatCard
-          title="Active Campaigns"
-          value={campaignCount ?? 0}
-          icon={Target}
-          change="+3 from last week"
-          changeType="increase"
-        />
-        <StatCard
-          title="Total Revenue"
-          value="$12,432.00"
-          icon={DollarSign}
-          change="+12% from last month"
-          changeType="increase"
-        />
-        <StatCard
-          title="Conversion Rate"
-          value="4.2%"
-          icon={TrendingUp}
-          change="-0.3% from last week"
-          changeType="decrease"
-        />
-        <StatCard
-          title="Total Clicks"
-          value="12,430"
-          icon={MousePointerClick}
-          change="+8% from last week"
-          changeType="increase"
-        />
-        <StatCard
-          title="Total Leads"
-          value="523"
-          icon={Users}
-          change="+18% this week"
-          changeType="increase"
-        />
-        <StatCard
-          title="Top Country"
-          value="United States"
-          icon={Globe}
-          change="35% of traffic"
-        />
+        {statItems.map((item) => (
+          <StatCard
+            key={item.title}
+            title={item.title}
+            value={item.valueKey ? (stats as any)[item.valueKey] : item.value}
+            change={item.change}
+            changeType={item.changeType}
+            icon={item.icon}
+          />
+        ))}
       </StatGrid>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">

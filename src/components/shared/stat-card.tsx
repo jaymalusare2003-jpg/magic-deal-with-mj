@@ -1,14 +1,15 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { ArrowUpRight, ArrowDownRight, LucideIcon } from "lucide-react"
+import { ArrowUpRight, ArrowDownRight } from "lucide-react"
+import { DynamicIcon } from "./dynamic-icon"
 
 export interface StatCardProps {
   title: string
   value: string | number
   change?: string
   changeType?: "increase" | "decrease"
-  icon?: LucideIcon
+  icon?: string
   className?: string
 }
 
@@ -17,9 +18,10 @@ export function StatCard({
   value,
   change,
   changeType = "increase",
-  icon: Icon,
+  icon,
   className,
 }: StatCardProps) {
+  const Icon = icon ? DynamicIcon({ name: icon }) : null
   return (
     <div className={cn("bg-card border rounded-xl p-6", className)}>
       <div className="flex items-center justify-between">

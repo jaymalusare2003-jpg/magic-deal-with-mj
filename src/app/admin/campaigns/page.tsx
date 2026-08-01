@@ -37,10 +37,10 @@ export default async function CampaignsPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Total Campaigns" value={(campaigns || []).length} icon={BarChart3} />
-        <StatCard title="Active" value={(campaigns || []).filter((c: any) => c.status === "active").length} icon={Globe} />
-        <StatCard title="Drafts" value={(campaigns || []).filter((c: any) => c.status === "draft").length} icon={Search} />
-        <StatCard title="Completed" value={(campaigns || []).filter((c: any) => c.status === "completed").length} icon={BarChart3} />
+        <StatCard title="Total Campaigns" value={(campaigns || []).length} icon="BarChart3" />
+        <StatCard title="Active" value={(campaigns || []).filter((c: any) => c.status === "active").length} icon="Globe" />
+        <StatCard title="Drafts" value={(campaigns || []).filter((c: any) => c.status === "draft").length} icon="Search" />
+        <StatCard title="Completed" value={(campaigns || []).filter((c: any) => c.status === "completed").length} icon="BarChart3" />
       </div>
 
        <DataTable

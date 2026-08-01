@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next({
+  let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options)
+            response.cookies.set(name, value, options as any)
           })
         },
       },
@@ -40,6 +40,11 @@ export async function middleware(request: NextRequest) {
 
   if (isAdminRoute && !user && !isPublicRoute && !isCampaignRoute) {
     return NextResponse.redirect(new URL('/login', request.url))
+  }
+
+  // If user is on login page and already authenticated, redirect to admin
+  if (isLoginPage && user) {
+    return NextResponse.redirect(new URL('/admin', request.url))
   }
 
   return response

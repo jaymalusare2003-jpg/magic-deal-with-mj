@@ -93,9 +93,9 @@ export default async function IntegrationsPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard title="Connected" value={connectedCount} icon={CheckCircle} />
-        <StatCard title="Disconnected" value={disconnectedCount} icon={XCircle} />
-        <StatCard title="Errors" value={errorCount} icon={AlertCircle} />
+        <StatCard title="Connected" value={connectedCount} icon="CheckCircle" />
+        <StatCard title="Disconnected" value={disconnectedCount} icon="XCircle" />
+        <StatCard title="Errors" value={errorCount} icon="AlertCircle" />
       </div>
 
       <div className="space-y-4">

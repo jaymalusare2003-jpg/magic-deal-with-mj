@@ -58,10 +58,10 @@ export default async function LinkHealthPage() {
       <p className="text-sm text-muted-foreground">Last checked: {lastChecked}</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <StatCard title="Active" value={activeCount} icon={CheckCircle} />
-        <StatCard title="Warning" value={warningCount} icon={AlertCircle} />
-        <StatCard title="Broken" value={brokenCount} icon={AlertCircle} />
-        <StatCard title="Expired" value={expiredCount} icon={PauseCircle} />
+        <StatCard title="Active" value={activeCount} icon="CheckCircle" />
+        <StatCard title="Warning" value={warningCount} icon="AlertCircle" />
+        <StatCard title="Broken" value={brokenCount} icon="AlertCircle" />
+        <StatCard title="Expired" value={expiredCount} icon="PauseCircle" />
       </div>
 
       <Card>

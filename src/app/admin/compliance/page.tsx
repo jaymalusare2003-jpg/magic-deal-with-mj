@@ -85,9 +85,9 @@ export default async function CompliancePage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard title="Verified" value={verifiedCount} icon={CheckCircle} />
-        <StatCard title="Needs Verification" value={mockCompliance.length - verifiedCount} icon={AlertCircle} />
-        <StatCard title="Flagged Unknown" value={flaggedCount} icon={Shield} />
+        <StatCard title="Verified" value={verifiedCount} icon="CheckCircle" />
+        <StatCard title="Needs Verification" value={mockCompliance.length - verifiedCount} icon="AlertCircle" />
+        <StatCard title="Flagged Unknown" value={flaggedCount} icon="Shield" />
       </div>
 
       <Card>
