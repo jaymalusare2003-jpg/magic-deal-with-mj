@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MAGIC DEAL WITH MJ
 
-## Getting Started
+AI-Powered CPA Affiliate Marketing Management Platform
 
-First, run the development server:
+## Deployment
 
+### 1. Create a Supabase Project
+
+1. Go to [supabase.com](https://supabase.com) and create a new project
+2. In the SQL Editor, run the schema from `src/lib/db/schema.sql`
+3. This will create all tables with default data (countries, categories, CPA networks, AI employees)
+
+### 2. Get Supabase Credentials
+
+From your Supabase project settings:
+- Copy `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
+- Copy `anon/public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- Copy `service_role` key → `SUPABASE_SERVICE_ROLE_KEY` (keep secret!)
+
+### 3. Deploy to Vercel
+
+#### Option A: Using Vercel CLI
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install -g vercel
+vercel login
+vercel
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Option B: Using Vercel Dashboard
+1. Push this repository to GitHub
+2. Go to [vercel.com](https://vercel.com) → New Project
+3. Import your GitHub repository
+4. Set Environment Variables (see below)
+5. Deploy
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Set these in your Vercel project settings:
 
-## Learn More
+```
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+OPENAI_API_KEY=your-openai-api-key
+NEXTAUTH_SECRET=your-random-secret
+NEXTAUTH_URL=your-vercel-app-url
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 5. Create Admin Account
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+After deployment:
+1. Go to your app URL
+2. Click "Admin Login"
+3. Sign up with your email and password
+4. In Supabase SQL Editor, update your role to super_admin:
+```sql
+UPDATE profiles SET role = 'super_admin' WHERE email = 'your-email@example.com';
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Development
 
-## Deploy on Vercel
+```bash
+npm install
+npm run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Open [http://localhost:3000](http://localhost:3000)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Features
+
+- Secure Admin authentication with Supabase Auth
+- AI Employee system with 11 specialized agents
+- CPA Network management (AdsBlueMedia, CPAGrip, + custom)
+- Offer management with country targeting
+- Landing Page Builder with drag-drop editor
+- Dynamic country-based offer routing
+- Campaign management with UTM tracking
+- Analytics dashboard with charts
+- AI-powered reports
+- Compliance center
+- Link health monitoring
+- PWA installable app

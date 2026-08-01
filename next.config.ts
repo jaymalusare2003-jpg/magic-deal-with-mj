@@ -1,7 +1,26 @@
 import type { NextConfig } from "next";
 import withPWA from "next-pwa";
 
-const nextConfig: NextConfig = {
+const withPWAConfig = withPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: false,
+  disable: process.env.NODE_ENV === "development",
+  runtimeCaching: [
+    {
+      pattern: "/api/*",
+      options: {
+        cache: {
+          name: "api-cache",
+          maxEntries: 100,
+          maxAgeSeconds: 60,
+        },
+      },
+    },
+  ],
+});
+
+const nextConfig: NextConfig = withPWAConfig({
   reactStrictMode: true,
   images: {
     remotePatterns: [
@@ -21,36 +40,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-};
+  turbopack: {},
+});
 
-const withPWAConfig = withPWA({
-  dest: "public",
-  disable: process.env.NODE_ENV === "development",
-  runtimeCaching: [
-    {
-      route: (request: Request) => request.destination === "image",
-      handler: "CacheFirst",
-      options: {
-        cacheName: "images",
-        expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 30 },
-      },
-    },
-    {
-      route: (url: URL) => url.pathname.startsWith("/api/"),
-      handler: "NetworkFirst",
-      options: {
-        cacheName: "api-cache",
-        expiration: { maxEntries: 50, maxAgeSeconds: 60 * 5 },
-      },
-    },
-    {
-      route: (request: Request) => request.destination === "document",
-      handler: "StaleWhileRevalidate",
-      options: {
-        cacheName: "documents",
-      },
-    },
-  ],
-})(nextConfig);
-
-export default withPWAConfig;
+export default nextConfig;

@@ -1,6 +1,8 @@
 import { Sidebar, Header } from "@/components/layout/sidebar";
 import { Providers } from "@/components/providers";
 
+export const dynamic = "force-dynamic";
+
 export default function AdminLayout({
   children,
 }: {

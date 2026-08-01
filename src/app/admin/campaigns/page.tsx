@@ -1,13 +1,10 @@
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
 import { StatCard } from "@/components/shared/stat-card"
 import { DataTable } from "@/components/shared/data-table"
+import { CampaignDialog } from "@/components/admin/campaign-dialog"
 import Link from "next/link"
 import { Copy, Plus, Edit, Search, Globe, BarChart3, QrCode, Link2 } from "lucide-react"
-import { useState } from "react"
 
 export default async function CampaignsPage() {
   const supabase = await createClient()
@@ -100,118 +97,4 @@ export default async function CampaignsPage() {
       />
     </div>
   )
-}
-
-function CampaignDialog({ offers, networks, categories, countries, landingPages }: {
-  offers: any[]
-  networks: any[]
-  categories: any[]
-  countries: any[]
-  landingPages: any[]
-}) {
-  const [open, setOpen] = useState(false)
-
-  if (!open) {
-    return (
-      <Button onClick={() => setOpen(true)}>
-        <Plus className="h-4 w-4 mr-2" />
-        New Campaign
-      </Button>
-    )
-  }
-
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-card border rounded-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold">Create New Campaign</h2>
-          <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground">✕</button>
-        </div>
-
-        <form action={saveCampaign} className="p-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label>Campaign Name *</Label>
-              <Input name="name" placeholder="e.g. Summer Sale USA" required />
-            </div>
-            <div>
-              <Label>Slug</Label>
-              <Input name="slug" placeholder="auto-generated" />
-            </div>
-            <div>
-              <Label>Offer *</Label>
-              <select name="offer_id" required className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
-                <option value="">Select Offer</option>
-                {offers.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <Label>Country *</Label>
-              <select name="country_id" required className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
-                <option value="">Select Country</option>
-                {countries.map(c => <option key={c.code} value={c.code}>{c.name} ({c.code})</option>)}
-              </select>
-            </div>
-            <div>
-              <Label>Category</Label>
-              <select name="category_id" className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
-                <option value="">Select Category</option>
-                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <Label>Landing Page</Label>
-              <select name="landing_page_id" className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
-                <option value="">Select Landing Page</option>
-                {landingPages.map(lp => <option key={lp.id} value={lp.id}>{lp.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <Label>Status</Label>
-              <select name="status" className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
-                <option value="draft">Draft</option>
-                <option value="active">Active</option>
-                <option value="paused">Paused</option>
-                <option value="completed">Completed</option>
-              </select>
-            </div>
-            <div>
-              <Label>Budget ($)</Label>
-              <Input name="budget" type="number" placeholder="0.00" />
-            </div>
-            <div>
-              <Label>Start Date</Label>
-              <Input name="start_date" type="date" />
-            </div>
-            <div>
-              <Label>End Date</Label>
-              <Input name="end_date" type="date" />
-            </div>
-            <div className="md:col-span-2">
-              <Label>Country-Offer Mapping (JSON)</Label>
-              <textarea name="country_offer_mapping" placeholder='{"US": "offer-a-id", "UK": "offer-b-id"}' className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm font-mono" rows={4} />
-            </div>
-            <div className="md:col-span-2">
-              <Label>Notes</Label>
-              <Textarea name="notes" placeholder="Additional notes..." />
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-3 pt-4 border-t">
-            <button type="button" onClick={() => setOpen(false)} className="px-4 py-2 text-sm border rounded-lg hover:bg-muted">Cancel</button>
-            <button type="submit" className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-lg">Create Campaign</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  )
-}
-
-async function saveCampaign(formData: FormData) {
-  "use server"
-  const supabase = await createClient()
-  const updates: Record<string, any> = {}
-  const fields = ["name", "slug", "offer_id", "cpa_network_id", "category_id", "country_id", "landing_page_id", "status", "budget", "start_date", "end_date", "country_offer_mapping", "traffic_source_id", "notes"]
-  fields.forEach(f => { updates[f] = formData.get(f) })
-  await (supabase as any).from("campaigns").insert(updates)
 }
