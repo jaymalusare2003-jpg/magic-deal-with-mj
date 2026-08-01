@@ -45,19 +45,25 @@ export function CrudPage({ config }: { config: CrudConfig }) {
   const [editingRow, setEditingRow] = useState<any>(null)
   const [searchQuery, setSearchQuery] = useState("")
   const queryClient = useQueryClient()
-  const supabase = createClient()
+  const supabase = useMemo(() => {
+    if (typeof window === "undefined") return null
+    return createClient()
+  }, [])
 
   const { data: rows, isLoading, refetch } = useQuery({
     queryKey: [config.table],
     queryFn: async () => {
+      if (!supabase) throw new Error("Supabase client not available")
       const { data, error } = await supabase.from(config.table).select("*")
       if (error) throw error
       return data
     },
+    enabled: !!supabase,
   })
 
   const createMutation = useMutation({
     mutationFn: async (payload: any) => {
+      if (!supabase) throw new Error("Supabase client not available")
       const { data, error } = await supabase.from(config.table).insert(payload).select().single()
       if (error) throw error
       return data
@@ -69,6 +75,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, ...payload }: any) => {
+      if (!supabase) throw new Error("Supabase client not available")
       const { data, error } = await supabase
         .from(config.table)
         .update({ ...payload, updated_at: new Date().toISOString() })
@@ -85,6 +92,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
+      if (!supabase) throw new Error("Supabase client not available")
       const { error } = await supabase.from(config.table).delete().eq("id", id)
       if (error) throw error
     },

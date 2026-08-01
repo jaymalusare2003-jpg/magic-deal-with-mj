@@ -4,7 +4,8 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Bell, CheckCheck, Trash2, AlertCircle, CheckCircle, Info } from "lucide-react"
+import { Bell, CheckCheck, Trash2 } from "lucide-react"
+import { DynamicIcon } from "@/components/shared/dynamic-icon"
 import { createClient } from "@/lib/supabase/client"
 import { Label } from "@/components/ui/label"
 
@@ -20,10 +21,10 @@ const mockNotifications = [
 ]
 
 const typeIcons = {
-  success: CheckCircle,
-  error: AlertCircle,
-  warning: AlertCircle,
-  info: Info,
+  success: "CheckCircle",
+  error: "AlertCircle",
+  warning: "AlertCircle",
+  info: "Info",
 }
 
 const typeColors = {
@@ -104,7 +105,8 @@ export default function NotificationsPage() {
         <CardContent>
           <div className="space-y-2">
             {filtered.map((notification) => {
-              const Icon = (typeIcons as Record<string, typeof CheckCircle>)[notification.type]
+              const iconName = (typeIcons as Record<string, string>)[notification.type] || "Info"
+              const Icon = DynamicIcon({ name: iconName }) || ((props: any) => null)
               return (
                 <div
                   key={notification.id}

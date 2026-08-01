@@ -1,11 +1,21 @@
-import { createClient } from "@/lib/supabase/server"
+"use client"
+
+import { useState, useEffect } from "react"
+import { createClient } from "@/lib/supabase/client"
 import { CrudPage } from "@/components/shared/crud-page"
 import type { CrudConfig } from "@/components/shared/crud-page"
 
-export default async function TrafficSourcesPage() {
-  const supabase = await createClient()
-  const { data: countries } = await supabase.from("countries").select("code, name") as any
-  const countryOptions = (countries || []).map((c: any) => ({ value: c.code, label: `${c.name} (${c.code})` }))
+export default function TrafficSourcesPage() {
+  const [countryOptions, setCountryOptions] = useState<Array<{ value: string; label: string }>>([])
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      const supabase = createClient()
+      const { data: countries } = await supabase.from("countries").select("code, name")
+      setCountryOptions((countries || []).map((c: any) => ({ value: c.code, label: `${c.name} (${c.code})` })))
+    }
+    fetchOptions()
+  }, [])
 
   const config: CrudConfig = {
     table: "traffic_sources",

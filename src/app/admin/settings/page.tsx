@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { StatCard } from "@/components/shared/stat-card"
-import { Save, Download, Trash2, Shield } from "lucide-react"
+import { Save, Download, Trash2, Shield, Sun } from "lucide-react"
 
 export default async function SettingsPage() {
   const supabase = await createClient()
@@ -27,7 +27,7 @@ export default async function SettingsPage() {
           <h1 className="text-2xl font-bold">Admin Settings</h1>
           <p className="text-sm text-muted-foreground">Application configuration and admin controls</p>
         </div>
-        <Button>
+        <Button type="submit" form="settings-form">
           <Save className="h-4 w-4 mr-2" />
           Save All Settings
         </Button>
@@ -38,7 +38,7 @@ export default async function SettingsPage() {
         <StatCard title="Audit Logs" value={auditLogs?.length || 0} icon="Shield" />
       </div>
 
-      <form action={saveSettings} method="post" className="space-y-6">
+      <form id="settings-form" action={saveSettings} method="post" className="space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>Admin Profile</CardTitle>
@@ -123,7 +123,10 @@ export default async function SettingsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label>Theme</Label>
+              <Label className="flex items-center gap-2">
+                <Sun className="h-4 w-4" />
+                Theme
+              </Label>
               <select name="theme" className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
                 <option value="system">System (Auto)</option>
                 <option value="light">Light</option>
@@ -220,14 +223,14 @@ export async function saveSettings(formData: FormData) {
   "use server"
   const supabase = await createClient()
   const settings = ["auto_update", "auto_routing", "auto_offer_replacement", "auto_optimization", "ai_recommendations", "theme", "primary_color"]
-  settings.forEach(key => {
+  for (const key of settings) {
     const value = formData.get(key)
     if (value !== null) {
-      (supabase as any).from("app_settings").upsert({
+      await (supabase as any).from("app_settings").upsert({
         key,
         value: value === "on" ? true : value,
         updated_at: new Date().toISOString(),
       }, "key")
     }
-  })
+  }
 }
