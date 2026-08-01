@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 
     const { data: offer, error: offerError } = await supabase
       .from("offers")
-      .select("*, cpa_networks(*), categories(*), countries(*)")
+      .select("*, cpa_networks(*), categories(*)")
       .eq("id", offerId)
       .single() as any
 

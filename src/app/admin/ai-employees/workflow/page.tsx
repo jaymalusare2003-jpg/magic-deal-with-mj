@@ -70,43 +70,45 @@ export default function WorkflowPage() {
       setWorkflowResults(prev => ({ ...prev, [key.id]: { status: "pending" } }))
     })
 
-    for (const step of WORKFLOW_STEPS) {
-      setWorkflowResults(prev => ({ ...prev, [step.id]: { status: "running", startedAt: new Date().toISOString() } }))
-      setWorkflowLog(prev => [...prev, `Starting: ${step.name}`])
+    setWorkflowLog(prev => [...prev, `Starting full workflow for offer: ${selectedOffer}`])
 
-      try {
-        const response = await fetch("/api/ai/workflow", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ offerId: selectedOffer, step: step.id }),
-        })
+    try {
+      const response = await fetch("/api/ai/workflow", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ offerId: selectedOffer }),
+      })
 
-        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
 
-        const result = await response.json()
-        if (result.results?.[step.id]) {
+      const result = await response.json()
+
+      WORKFLOW_STEPS.forEach(step => {
+        const stepResult = result.results?.[step.id]
+        if (stepResult) {
           setWorkflowResults(prev => ({
             ...prev,
             [step.id]: {
-              status: result.results[step.id].status || "completed",
-              result: result.results[step.id].result,
-              startedAt: result.results[step.id].startedAt,
-              completedAt: result.results[step.id].completedAt,
+              status: stepResult.status || "completed",
+              result: stepResult.result,
+              startedAt: stepResult.startedAt,
+              completedAt: stepResult.completedAt,
+              error: stepResult.error,
             },
           }))
+          setWorkflowLog(prev => [...prev, `${step.name}: ${stepResult.status}`])
         } else {
-          setWorkflowResults(prev => ({ ...prev, [step.id]: { status: "completed", result: "Step completed" } }))
+          setWorkflowResults(prev => ({ ...prev, [step.id]: { status: "skipped" } }))
+          setWorkflowLog(prev => [...prev, `${step.name}: skipped`])
         }
+      })
 
-        setWorkflowLog(prev => [...prev, `Completed: ${step.name}`])
-      } catch (error) {
-        setWorkflowResults(prev => ({ ...prev, [step.id]: { status: "failed", error: String(error) } }))
-        setWorkflowLog(prev => [...prev, `Failed: ${step.name} - ${error}`])
-      }
+      setWorkflowLog(prev => [...prev, "Workflow completed!"])
+    } catch (error) {
+      setWorkflowLog(prev => [...prev, `Workflow failed: ${error}`])
+    } finally {
+      setIsRunning(false)
     }
-
-    setIsRunning(false)
-    setWorkflowLog(prev => [...prev, "Workflow completed!"])
   }
 
   const resetWorkflow = () => {

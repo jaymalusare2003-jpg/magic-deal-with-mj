@@ -110,3 +110,58 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+export async function PUT(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const employeeId = searchParams.get("employeeId")
+
+    if (!employeeId) {
+      return NextResponse.json({ error: "employeeId is required" }, { status: 400 })
+    }
+
+    const body = await request.json()
+    const supabase = await createClient()
+
+    const { data: employee, error: fetchError } = await supabase
+      .from("ai_employees")
+      .select("*")
+      .eq("id", employeeId)
+      .single() as any
+
+    if (fetchError || !employee) {
+      return NextResponse.json({ error: "AI Employee not found" }, { status: 404 })
+    }
+
+    const updates: Record<string, any> = {}
+    const allowedFields = ["name", "icon", "role", "description", "system_instructions", "editable_prompt", "ai_model", "enabled", "model_config"]
+    allowedFields.forEach(f => {
+      if (body[f] !== undefined) updates[f] = body[f]
+    })
+
+    updates.updated_at = new Date().toISOString()
+
+    const { error: updateError } = await (supabase as any)
+      .from("ai_employees")
+      .update(updates)
+      .eq("id", employeeId)
+
+    if (updateError) throw updateError
+
+    await (supabase as any).from("notifications").insert({
+      user_id: (await supabase.auth.getUser()).data.user?.id,
+      title: `AI Employee Updated`,
+      message: `${employee.name} configuration was updated.`,
+      type: "info",
+      read: false,
+    }) as any
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("AI Employee PUT error:", error)
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Internal server error" },
+      { status: 500 }
+    )
+  }
+}
