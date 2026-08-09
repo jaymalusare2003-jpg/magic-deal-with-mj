@@ -21,7 +21,7 @@ import {
   Undo, Redo,
   Type
 } from "lucide-react"
-import { useRef } from "react"
+import { useRef, useEffect } from "react"
 
 const FONT_FAMILIES = [
   { value: "inherit", label: "Inherit" },
@@ -42,14 +42,15 @@ interface TiptapEditorProps {
   onChange?: (content: string) => void
   placeholder?: string
   height?: string
+  editable?: boolean
 }
 
-function MenuButton({ 
-  onClick, 
-  isActive = false, 
-  icon: Icon, 
+function MenuButton({
+  onClick,
+  isActive = false,
+  icon: Icon,
   title,
-  ...props 
+  ...props
 }: {
   onClick: () => void
   isActive?: boolean
@@ -69,12 +70,12 @@ function MenuButton({
   )
 }
 
-export default function TiptapEditor({ content, onChange, placeholder, height = "min-h-[200px]" }: TiptapEditorProps) {
+export default function TiptapEditor({ content, onChange, placeholder, height = "min-h-[200px]", editable = true }: TiptapEditorProps) {
   const menuContainerRef = useRef<HTMLDivElement>(null)
 
   const editor = useEditor({
     immediatelyRender: false,
-    editable: true,
+    editable,
     content: content || "",
     extensions: [
       StarterKit.configure({
@@ -108,6 +109,12 @@ export default function TiptapEditor({ content, onChange, placeholder, height = 
       onChange?.(editor.getHTML())
     },
   })
+
+  useEffect(() => {
+    if (editor && editor.isEditable !== editable) {
+      editor.setEditable(editable)
+    }
+  }, [editable, editor])
 
   if (!editor) return null
 
